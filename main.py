@@ -53,7 +53,6 @@ def main():
             QMessageBox.warning(auth_win, "Login Failed",
                                 "Invalid Username or Password! Please try again.")
 
-    # Launch the unified auth window
     auth_win = AuthWindow(on_login_success=start_main_app, db_manager=db)
     auth_win.show()
 

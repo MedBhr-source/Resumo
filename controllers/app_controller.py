@@ -92,17 +92,17 @@ class AppController:
         self.skeleton_timer.timeout.connect(self.animate_skeleton)
         self.skeleton_dots = 0
 
-        # --- Connect UI Buttons to Logic ---
+        #  Connect UI Buttons to Logic 
         self.view.upload_box.clicked.connect(self.handle_upload)
         self.view.btn_analyze.clicked.connect(self.handle_analyze)
         self.view.btn_download.clicked.connect(self.handle_download)
 
-        # --- Connect Vault list and actions ---
+        #  Connect Vault list and actions 
         self.view.vault_list.itemClicked.connect(self.on_vault_item_clicked)
         self.view.btn_vault_delete.clicked.connect(self.on_vault_delete)
         self.view.btn_vault_export.clicked.connect(self.on_vault_export)
 
-        # --- Connect Chat UI ---
+        #  Connect Chat UI 
         self.chat_history = []
         self.view.btn_chat_toggle.clicked.connect(self.toggle_chat)
         self.view.btn_chat_close.clicked.connect(self.toggle_chat)
@@ -119,7 +119,6 @@ class AppController:
 
 
     def handle_upload(self):
-        """Handles the file selection and text extraction"""
         file_path, _ = QFileDialog.getOpenFileName(
             self.view, "Open Resume", "", "Documents (*.pdf *.docx *.txt)"
         )
@@ -134,7 +133,6 @@ class AppController:
                 self.view.upload_box.setText(f"{os.path.basename(file_path)} Uploaded")
 
     def handle_analyze(self):
-        """The main logic: Analysis -> Progress Bar -> Rewrite -> Result"""
         jd_text = self.view.jd_input.toPlainText()
         
         if not self.current_resume_text or not jd_text:
@@ -143,9 +141,9 @@ class AppController:
 
         self.view.progress_bar.setVisible(True)
         self.view.progress_bar.setValue(0)
-        self.view.btn_analyze.setEnabled(False) # Disable button while running
-        self.view.btn_download.setVisible(False) # Hide download button from previous run
-        self.view.keywords_container.setVisible(False) # Hide keywords from previous run
+        self.view.btn_analyze.setEnabled(False) 
+        self.view.btn_download.setVisible(False) 
+        self.view.keywords_container.setVisible(False) 
         
         self.view.results_area.setVisible(False)
         self.view.skeleton_label.setVisible(True)
@@ -173,14 +171,12 @@ class AppController:
         self.view.btn_analyze.setEnabled(True)
         self.view.progress_bar.setVisible(False)
         
-        # Extract data from the result dictionary
         self.auto_version_name = result.get('suggested_version_name', 'Optimized_Resume')
         score = result.get('match_score', 0)
 
-        # --- Missing Keywords Display ---
+        #  Missing Keywords Display 
         missing_keywords = result.get('missing_keywords', [])
         if isinstance(missing_keywords, list) and missing_keywords:
-            # Build colored tag chips
             tags_html = ""
             for kw in missing_keywords:
                 tags_html += (
@@ -193,7 +189,7 @@ class AppController:
         else:
             self.view.keywords_container.setVisible(False)
 
-        # --- Suggestions ---
+        #  Suggestions 
         suggestions = result.get('improvement_suggestions', [])
         if isinstance(suggestions, list):
             formatted_sugg = "\n".join([f"- {s}" for s in suggestions])
@@ -202,7 +198,7 @@ class AppController:
         else:
             formatted_sugg = "No suggestions available."
 
-        # --- Check if score is below threshold ---
+        #  Check if score is below threshold 
         if isinstance(score, (int, float)) and score < MIN_MATCH_SCORE_FOR_REWRITE:
             display_text = (
                 f" Match Score: {score}%\n"
@@ -247,7 +243,6 @@ class AppController:
             print(f"History Save FAILED: {e}")
 
     def handle_download(self):
-        """Saves the result to MySQL and exports as a .docx file"""
         if not self.rewritten_text: 
             return
         
@@ -430,10 +425,7 @@ class AppController:
                 QMessageBox.critical(self.view, "File Error", f"Could not export file: {e}")
 
     def _export_to_docx(self, content, path):
-        """Helper method to format Markdown text into a professional Word document."""
         doc = Document()
-        
-        # Adjust margins for a standard resume look
         sections = doc.sections
         for section in sections:
             section.top_margin = Inches(0.6)

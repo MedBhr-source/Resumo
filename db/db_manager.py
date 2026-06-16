@@ -26,8 +26,7 @@ class DBManager:
             return None
         
     def execute_query(self, query, params=None):
-        """Execute an INSERT, UPDATE, or DELETE query.
-        Returns the last inserted row ID for INSERT queries, or None."""
+        
         conn = self.connect()
         if conn:
             cursor = conn.cursor()
@@ -49,7 +48,6 @@ class DBManager:
         return None
     
     def fetch_query(self, query, params=None):
-        """Execute a SELECT query and return results as a list of dicts."""
         conn = self.connect()
         if conn:
             cursor = conn.cursor(dictionary=True)
@@ -58,7 +56,6 @@ class DBManager:
         return []
     
     def verify_user(self, username, pswrd):
-        """Verify user credentials. Returns True if valid, False otherwise."""
         query = "SELECT password FROM users WHERE username = %s"
         result = self.fetch_query(query, (username,))
         if result:
@@ -72,7 +69,6 @@ class DBManager:
         return False
 
     def save_user(self, username, pswrd):
-        """Hash password and save a new user. Returns the new user's ID."""
         hashed = bcrypt.hashpw(pswrd.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         query = "INSERT INTO users (username, password) VALUES (%s, %s)"
         return self.execute_query(query, (username, hashed))

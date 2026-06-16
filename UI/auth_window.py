@@ -1,5 +1,4 @@
-from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QLineEdit,
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QLabel, QLineEdit,
     QPushButton, QFrame, QGraphicsDropShadowEffect, QMessageBox
 )
 from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QPoint, QParallelAnimationGroup, QTimer
@@ -7,15 +6,8 @@ from PySide6.QtGui import QColor, QLinearGradient, QPainter, QPixmap, QBrush
 import os
 import random
 
-# ─────────────────────────────────────────────────────────────────────────────
-#  AuthWindow  –  Single window hosting both Login & Register panels.
-#  Panels slide horizontally (OutCubic easing) between each other:
-#   • Sign Up  → login exits LEFT,  register enters from RIGHT
-#   • Sign In  → register exits RIGHT, login enters from LEFT
-# ─────────────────────────────────────────────────────────────────────────────
-
 class AuthWindow(QWidget):
-    # Fixed window dimensions – both panels share this size
+
     W = 520
     H = 700
 
@@ -53,7 +45,8 @@ class AuthWindow(QWidget):
         self.login_panel.show()
         self.register_panel.show()
 
-    # ──────────────────────────── HELPERS ─────────────────────────────────
+    #  HELPERS 
+
     def _card_shadow(self):
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(50)
@@ -112,7 +105,8 @@ class AuthWindow(QWidget):
             QPushButton:hover { color: #38BDF8; }
         """
 
-    # ──────────────────────────── LOGIN PANEL ─────────────────────────────
+    #  LOGIN PANEL 
+
     def _build_login_panel(self):
         panel = QWidget(self)
         panel.setStyleSheet("background: transparent;")
@@ -191,7 +185,8 @@ class AuthWindow(QWidget):
         outer.addWidget(card)
         return panel
 
-    # ──────────────────────────── REGISTER PANEL ──────────────────────────
+    #  REGISTER PANEL 
+
     def _build_register_panel(self):
         panel = QWidget(self)
         panel.setStyleSheet("background: transparent;")
@@ -273,7 +268,7 @@ class AuthWindow(QWidget):
         outer.addWidget(card)
         return panel
 
-    # ──────────────────────────── ANIMATION ───────────────────────────────
+    #  ANIMATION 
     def _go_to_register(self):
         """Login exits LEFT  ←  |  Register enters from RIGHT  →"""
         self._animate(
@@ -311,7 +306,8 @@ class AuthWindow(QWidget):
         self._anim_group.addAnimation(a_reg)
         self._anim_group.start()
 
-    # ──────────────────────────── BUSINESS LOGIC ──────────────────────────
+    #  BUSINESS LOGIC 
+
     def _handle_login(self):
         self.on_login_success(self.login_username.text(), self.login_password.text())
 
@@ -351,7 +347,8 @@ class AuthWindow(QWidget):
         else:
             QMessageBox.critical(self, "Error", "Could not create account. Please try again.")
 
-    # ──────────────────────────── PARTICLE ANIMATION ──────────────────────
+    #  PARTICLE ANIMATION
+
     def _tick_particles(self):
         """Move each star upward; wrap around to the bottom when off-screen."""
         for s in self._stars:
@@ -361,7 +358,8 @@ class AuthWindow(QWidget):
                 s["x"] = random.uniform(0, self.W)
         self.update()   # trigger repaint
 
-    # ──────────────────────────── BACKGROUND ──────────────────────────────
+    #  BACKGROUND
+    
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
@@ -375,7 +373,7 @@ class AuthWindow(QWidget):
 
         # Animated star particles
         for s in self._stars:
-            color = QColor(139, 92, 246, s["alpha"])  # violet tint
+            color = QColor(139, 92, 246, s["alpha"])  
             painter.setBrush(QBrush(color))
             painter.setPen(Qt.NoPen)
             painter.drawEllipse(

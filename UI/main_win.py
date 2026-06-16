@@ -6,22 +6,6 @@ from PySide6.QtGui import QColor, QPixmap, QPainter, QLinearGradient, QBrush
 import os
 import random
 
-# ─────────────────────────────────────────────
-#  PALETTE  –  Deep Ocean Blue-Violet
-#  BG_DEEP    : #080D1A
-#  BG_SURFACE : #111827
-#  BG_CARD    : #141D2E
-#  BG_HOVER   : #1E2640
-#  BORDER     : #1E2D4A  (visible clear border)
-#  BORDER_FOC : #7C5CFC  (violet focus ring)
-#  PRIMARY_1  : #5B4FE8  (indigo)
-#  PRIMARY_2  : #8B5CF6  (violet)
-#  ACCENT     : #38BDF8  (sky-blue)
-#  TEXT_PRI   : #F1F5F9
-#  TEXT_SEC   : #94A3B8
-#  DANGER     : #F43F5E
-#  SUCCESS    : #10B981
-# ─────────────────────────────────────────────
 
 class MainWindow(QMainWindow):
     def __init__(self, username, on_logout=None):
@@ -29,11 +13,10 @@ class MainWindow(QMainWindow):
         self.on_logout = on_logout
         self._chat_visible = False
         
-        # 1. Window Configuration
         self.setWindowTitle("Resumo")
         self.setMinimumSize(1200, 800)
         
-        # --- GLOBAL THEME: DEEP OCEAN BLUE-VIOLET ---
+        #  GLOBAL THEME: DEEP OCEAN BLUE-VIOLET 
         self.setStyleSheet("""
             QMainWindow { background: transparent; }
             QWidget {
@@ -218,7 +201,7 @@ class MainWindow(QMainWindow):
             }
         """)
 
-        # ── Particle star-field setup ──────────────────────────────────────
+        #  Particle star-field setup 
         self._stars = [
             {
                 "x": random.uniform(0, 2000),
@@ -231,7 +214,7 @@ class MainWindow(QMainWindow):
         ]
         self._particle_timer = QTimer(self)
         self._particle_timer.timeout.connect(self._tick_particles)
-        self._particle_timer.start(16)   # ~60 fps
+        self._particle_timer.start(16)  
 
         # Main Container
         main_widget = QWidget()
@@ -241,9 +224,7 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        # =========================================================================
-        # --- LEFT SIDEBAR ---
-        # =========================================================================
+        # LEFT SIDEBAR 
         self.sidebar = QFrame()
         self.sidebar.setObjectName("Sidebar")
         self.sidebar.setFixedWidth(320)
@@ -251,7 +232,6 @@ class MainWindow(QMainWindow):
         sidebar_layout.setContentsMargins(20, 30, 20, 30)
         sidebar_layout.setSpacing(20)
         
-        # Drop Shadow on Sidebar
         sidebar_shadow = QGraphicsDropShadowEffect()
         sidebar_shadow.setBlurRadius(30)
         sidebar_shadow.setColor(QColor(0, 0, 0, 140))
@@ -292,10 +272,10 @@ class MainWindow(QMainWindow):
         profile_layout.addStretch()
         sidebar_layout.addWidget(profile_card)
 
-        # --- TABBED SECTION: History + Vault ---
+        #  TABBED SECTION: History + Vault 
         self.sidebar_tabs = QTabWidget()
 
-        # Tab 1: History
+        #  Tab 1: History 
         history_tab = QWidget()
         history_tab.setStyleSheet("background-color: #0F1928;")
         history_tab_layout = QVBoxLayout(history_tab)
@@ -384,9 +364,7 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(self.sidebar)
 
-        # =========================================================================
-        # --- MAIN CONTENT AREA ---
-        # =========================================================================
+        #  MAIN CONTENT AREA 
         main_content = QWidget()
         main_layout = QVBoxLayout(main_content)
         main_layout.setContentsMargins(60, 40, 60, 40)
@@ -412,18 +390,18 @@ class MainWindow(QMainWindow):
         header_layout.addWidget(self.app_logo)
         main_layout.addWidget(header_container)
 
-        # Middle: Horizontal Input Boxes
+        #  Horizontal Input Boxes
         input_container = QHBoxLayout()
         input_container.setSpacing(30)
         
-        # 1. JD Input Box
+        #  JD Input Box
         self.jd_input = QTextEdit()
         self.jd_input.setPlaceholderText(
             "Paste the Job Description here...\n\n"
             "Example: Looking for a Python Developer with 3 years of experience in Django and MySQL..."
         )
         
-        # 2. Right side vertical container
+        #  Right side vertical container
         right_container = QVBoxLayout()
         right_container.setSpacing(15)
 
@@ -529,8 +507,7 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(main_content)
 
-        # --- FLOATING CHAT OVERLAY ---
-        # Toggle Button
+        #  FLOATING CHAT OVERLAY 
         self.btn_chat_toggle = QPushButton("💬", self)
         self.btn_chat_toggle.setCursor(Qt.PointingHandCursor)
         self.btn_chat_toggle.setFixedSize(60, 60)
@@ -686,7 +663,7 @@ class MainWindow(QMainWindow):
         else:
             self.close()
 
-    # ──────────────────────────── PARTICLE ANIMATION ──────────────────────
+    #  PARTICLE ANIMATION 
     def _tick_particles(self):
         """Move each star upward; wrap around to the bottom when off-screen."""
         for s in self._stars:

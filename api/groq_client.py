@@ -38,8 +38,6 @@ class GroqAIClient :
                 return None
 
     def rewrite_resume(self, resume_text, jd_text, match_score=100):
-        """Rewrites the resume to better match the JD. 
-        If match_score < MIN_MATCH_SCORE_FOR_REWRITE, returns None (caller should handle this)."""
          
         if match_score < MIN_MATCH_SCORE_FOR_REWRITE:
             return None
@@ -89,10 +87,6 @@ class GroqAIClient :
              return None
 
     def chat_with_assistant(self, message_history):
-        """
-        Handles the conversational chat assistant.
-        message_history is a list of dicts: [{"role": "user", "content": "..."}, ...]
-        """
         system_prompt = {
             "role": "system",
             "content": (
